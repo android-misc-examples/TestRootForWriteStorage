@@ -2,9 +2,11 @@ package it.pgp.testrootforwritestorage;
 
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Created by pgp on 28/09/16
@@ -90,44 +92,44 @@ class RootHandler {
             } else {
                 p = (workingDir==null)?
                         Runtime.getRuntime().exec(s):
-                        Runtime.getRuntime().exec(s,null,workingDir)
-                ;
+                        Runtime.getRuntime().exec(s,null,workingDir); // use p.waitFor() to obtain return value at the end of the process
             }
         }
         catch (IOException i) {
             Log.e(RootHandler.class.getName(),"***IOException");
-//            return;
+            i.printStackTrace();
+            return;
         }
 
-//        try {
-//            Process process;
-//            if (workingDir == null) {
-//                process = Runtime.getRuntime().exec(s);
-//            }
-//            else {
-//                process = Runtime.getRuntime().exec(s,null,workingDir);
-//            }
-//
-//            Log.e(RootHandler.class.getName(),"Executed:\n"+s+"\n");
-//
-//            int exitValue = process.waitFor();
-//
-//            StringBuilder output = new StringBuilder();
-//            // no console output expected from process
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                output.append(line).append("\n");
-//            }
-//
-//            Log.d(RootHandler.class.getName(), "***BEGIN Parent process output:***\n" + output.toString() + "\n***END Parent process output***\nExit value: " + exitValue);
-//
-//        } catch (IOException i) {
-//            Log.e(RootHandler.class.getName(), "***IOException***");
-//            i.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Process process;
+            if (workingDir == null) {
+                process = Runtime.getRuntime().exec(s);
+            }
+            else {
+                process = Runtime.getRuntime().exec(s,null,workingDir);
+            }
+
+            Log.e(RootHandler.class.getName(),"Executed:\n"+s+"\n");
+
+            int exitValue = process.waitFor();
+
+            StringBuilder output = new StringBuilder();
+            // no console output expected from process
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            Log.d(RootHandler.class.getName(), "***BEGIN Parent process output:***\n" + output.toString() + "\n***END Parent process output***\nExit value: " + exitValue);
+
+        } catch (IOException i) {
+            Log.e(RootHandler.class.getName(), "***IOException***");
+            i.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
